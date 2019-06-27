@@ -5,7 +5,7 @@ import (
     "strings"
     "net/http"
     "html/template"
-    "test/darren/gowiki/pages"
+    "github.com/ldarren/agogo/pages"
 )
 
 var templates = template.Must(template.ParseFiles("./templates/view.html", "./templates/edit.html"))
