@@ -1,4 +1,4 @@
-package wiki
+package routes
 
 import (
     "fmt"
@@ -8,39 +8,39 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-engine := new Engine{}
-engine.Init("./view.html", "./edit.html")
+var engine templates.Engine
+var mux = httprouter.New()
 
 func readHandler(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
     fmt.Printf("Method: %s, URL: %s\n", req.Method, req.URL.Path)
 	title := ps.ByName("title")
-    p := &pages.Page{Title: title}
+    p := &models.Page{Title: title}
     err := p.Load()
     if err != nil {
 		createHandler(res, req, ps)
         return
     }
 
-    renderTemplate(res, "view", p)
+    engine.Render(res, "view", p)
 }
 
 func editHandler(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
     fmt.Printf("Method: %s, URL: %s\n", req.Method, req.URL.Path)
 	title := ps.ByName("title")
-    p := &pages.Page{Title: title}
+    p := &models.Page{Title: title}
     err := p.Load()
     if err != nil {
-        p = &pages.Page{Title: title}
+        p = &models.Page{Title: title}
     }
 
-    renderTemplate(res, "edit", p)
+    engine.Render(res, "edit", p)
 }
 
 func createHandler(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
     fmt.Printf("Method: %s, URL: %s\n", req.Method, req.URL.Path)
 	title := ps.ByName("title")
     body := req.FormValue("body")
-    p := &pages.Page{Title: title, Body: []byte(body)}
+    p := &models.Page{Title: title, Body: []byte(body)}
     err := p.Save()
     if err != nil {
         http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -50,8 +50,14 @@ func createHandler(res http.ResponseWriter, req *http.Request, ps httprouter.Par
     http.Redirect(res, req, "/wiki/" + title, http.StatusFound)
 }
 
-Wiki := httprouter.New()
+func init(){
+	engine.Init("./templates/view.html", "./templates/edit.html")
 
-Wiki.GET("/wiki/:title", readHandler)
-Wiki.POST("/wiki/:title", createHandler)
-Wiki.GET("/wiki/:title/edit", editHandler)
+	mux.GET("/wiki/:title", readHandler)
+	mux.POST("/wiki/:title", createHandler)
+	mux.GET("/wiki/:title/edit", editHandler)
+}
+
+func CreateWiki() http.Handler {
+	return mux
+}

@@ -1,16 +1,17 @@
 package main
 
 import (
+	"fmt"
+	"strings"
     "net/http"
-	"github.com/julienschmidt/httprouter"
-	"github.com/ldarren/agogo/routes/wiki"
+	"github.com/ldarren/agogo/routes"
 )
 
 type HostSwitch map[string]http.Handler
 
 func (hs HostSwitch) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if strings.Contains(req.URL.Path, "/wiki") {
-		if handler := hs['/wiki']; handler != nil {
+	if strings.Contains(r.URL.Path, "/wiki") {
+		if handler := hs["/wiki"]; handler != nil {
 			handler.ServeHTTP(w, r)
 		} else {
 			// Handle host names for which no handler is registered
@@ -21,6 +22,8 @@ func (hs HostSwitch) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	hs := make(HostSwitch)
-	hs["/wiki"] = Wiki
+	hs["/wiki"] = routes.CreateWiki()
+
+	fmt.Printf("agogo is serving at 8800\n")
     http.ListenAndServe(":8800", hs)
 }
