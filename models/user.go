@@ -1,7 +1,6 @@
 package models
-
+/*
 import (
-	"os"
 	"log"
 	"time"
 	"context"
@@ -29,18 +28,42 @@ func Ping(ctx context.Context) {
 	}
 }
 
+func Insert(ctx context.Context, username string, password string) {
+	ctx, cancel := context.WithTimeout(ctx, 5 * time.Second)
+	defer cancel()
+
+	stmtIns, err := pool.Prepare("INSERT INTO user VALUES( ?, ? )") // ? = placeholder
+	if err != nil {
+		log.Fatalf("unable to create prepared statement: %v", err)
+	}
+	defer stmtIns.Close() // Close the statement when we leave main() / the program terminates
+
+	_, err = stmtIns.Exec(username, password)
+	if err != nil {
+		log.Fatalf("unable to exec prepared statement: %v", err)
+	}
+}
+
 // Query the database for the information requested and prints the results.
 // If the query fails exit the program with an error.
 func Query(ctx context.Context, username string) {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 5 * time.Second)
 	defer cancel()
 
-	var password string
-	err := pool.QueryRowContext(ctx, "select u.password from user as u where u.username = :username;", sql.Named("username", username)).Scan(&password)
+	// Prepare statement for reading data
+	stmtOut, err := pool.Prepare("SELECT password FROM user WHERE username = ?")
 	if err != nil {
-		log.Fatal("unable to execute search query", err)
+		log.Fatalf("unable to create prepared statement: %v", err)
 	}
-	log.Println("password=", password)
+	defer stmtOut.Close()
+
+	var password string
+
+	err = stmtOut.QueryRow(username).Scan(&password) // WHERE number = 13
+	if err != nil {
+		log.Fatalf("unable to exec prepared statement: %v", err)
+	}
+	log.Printf("the password of %s is: %s", username, password)
 }
 
 func init(){
@@ -59,8 +82,8 @@ func init(){
 	pool.SetMaxIdleConns(*config.DB.Didle)
 	pool.SetMaxOpenConns(*config.DB.Dopen)
 
-	ctx, stop := context.WithCancel(context.Background())
-	defer stop()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	appSignal := make(chan os.Signal, 3)
 	signal.Notify(appSignal, os.Interrupt)
@@ -68,11 +91,12 @@ func init(){
 	go func() {
 		select {
 		case <-appSignal:
-			stop()
+			cancel()
 		}
 	}()
 
 	Ping(ctx)
 
-	Query(ctx, "hello")
+	Query(ctx, "foo")
 }
+*/
