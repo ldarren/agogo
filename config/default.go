@@ -1,10 +1,12 @@
 package config
 
 import (
+	"os"
+	"log"
 	"flag"
 	"time"
-	"log"
-	dotenv "github.com/direnv/go-dotenv"
+	"strconv"
+	dotenv "github.com/joho/godotenv"
 )
 
 type DatabaseConfig struct{
@@ -17,15 +19,29 @@ type DatabaseConfig struct{
 var DB DatabaseConfig
 
 func init(){
-	env, err := dotenv.Parse(".env")
+	err := dotenv.Load()
 	if err != nil {
 		log.Fatalf("unable to read dotenv: %v", err)
 	}
-	DB.Ddriver = flag.String("db_driver", env.db_driver, "database driver name")
+
+	DB.Ddriver = flag.String("db_driver", os.Getenv("db_driver"), "database driver name")
 	//dsn := flag.String("dsn", os.Getenv("DSN"), "connection data source name")
-	DB.Dsn = flag.String("db_source_name", env.db_source_name, "connection data source name")
-	DB.Dclt = flag.Duration("db_conn_life",env.db_conn_life, "connection max lifetime")
-	DB.Didle = flag.Int("db_conn_idle", env.db_conn_idle, "max idle connections")
-	DB.Dopen = flag.Int("db_conn_open", env.db_conn_open, "max open connections")
+	DB.Dsn = flag.String("db_source_name", os.Getenv("db_source_name"), "connection data source name")
+	var val int64
+	val, err = strconv.ParseInt(os.Getenv("db_conn_life"), 10, 0)
+	if err != nil {
+		val = 0
+	}
+	DB.Dclt = flag.Duration("db_conn_life", time.Duration(val), "connection max lifetime")
+	val, err = strconv.ParseInt(os.Getenv("db_conn_idle"), 10, 0)
+	if err != nil {
+		val = 2
+	}
+	DB.Didle = flag.Int("db_conn_idle", int(val), "max idle connections")
+	val, err = strconv.ParseInt(os.Getenv("db_conn_open"), 10, 0)
+	if err != nil {
+		val = 2
+	}
+	DB.Dopen = flag.Int("db_conn_open", int(val), "max open connections")
 	flag.Parse()
 }
