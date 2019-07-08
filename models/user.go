@@ -1,10 +1,9 @@
 package models
-/*
+
 import (
 	"log"
 	"time"
 	"context"
-	"os/signal"
     "database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/ldarren/agogo/config"
@@ -85,18 +84,7 @@ func init(){
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	appSignal := make(chan os.Signal, 3)
-	signal.Notify(appSignal, os.Interrupt)
-
-	go func() {
-		select {
-		case <-appSignal:
-			cancel()
-		}
-	}()
-
 	Ping(ctx)
 
 	Query(ctx, "foo")
 }
-*/
