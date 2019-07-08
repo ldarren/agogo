@@ -7,7 +7,7 @@ import (
 	"context"
 	"os/signal"
     "database/sql"
-	_ "github.com/siddontang/go-mysql/driver"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/ldarren/agogo/config"
 )
 
@@ -21,7 +21,7 @@ var pool *sql.DB // Database connection pool.
 // Ping the database to verify DSN provided by the user is valid and the
 // server accessible. If the ping fails exit the program with an error.
 func Ping(ctx context.Context) {
-	ctx, cancel := context.WithTimeout(ctx, 1*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 60 * time.Second)
 	defer cancel()
 
 	if err := pool.PingContext(ctx); err != nil {

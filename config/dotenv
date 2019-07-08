@@ -1,0 +1,5 @@
+db_driver=mysql
+db_source_name="USRNAME:PASSWD@(ADDR:PORT)/DBNAME"
+db_conn_life=0
+db_conn_idle=2
+db_conn_open=2

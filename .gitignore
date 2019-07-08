@@ -1,5 +1,6 @@
 static/*
 main
+*.env
 
 # Binaries for programs and plugins
 *.exe
