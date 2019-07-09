@@ -11,6 +11,7 @@ A go api framwork
 - json rest api
 - sql read write
 - service can be configured from commoand line, environment variable or dotenv file
+- secure configuration, prevented credential checkin into repository
 - minimum dependencies, make use of official libraries wherever possible: net/http, html/template, flag, log, db/sql, encoding/json
 
 ## dependencies
