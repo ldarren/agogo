@@ -9,7 +9,7 @@ import (
 )
 
 var engine templates.Engine
-var mux = httprouter.New()
+var wiki = httprouter.New()
 
 func readHandler(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
     fmt.Printf("Method: %s, URL: %s\n", req.Method, req.URL.Path)
@@ -50,14 +50,14 @@ func createHandler(res http.ResponseWriter, req *http.Request, ps httprouter.Par
     http.Redirect(res, req, "/wiki/" + title, http.StatusFound)
 }
 
-func init(){
+func init() {
 	engine.Init("./templates/view.html", "./templates/edit.html")
 
-	mux.GET("/wiki/:title", readHandler)
-	mux.POST("/wiki/:title", createHandler)
-	mux.GET("/wiki/:title/edit", editHandler)
+	wiki.GET("/wiki/:title", readHandler)
+	wiki.POST("/wiki/:title", createHandler)
+	wiki.GET("/wiki/:title/edit", editHandler)
 }
 
-func CreateWiki() http.Handler {
-	return mux
+func GetWiki() http.Handler {
+	return wiki
 }
