@@ -3,7 +3,9 @@ A go api framwork
 
 ## setup
 - copy config/dotenv to .env and replace your environment setting
-- go run main.go
+- `go run main.go` # quick run
+- `go build -o agogo`
+- `docker build -t agogo` .
 
 ## features
 - multiple route groups
