@@ -2,6 +2,7 @@ package routes
 
 import (
     "fmt"
+	"context"
     "net/http"
 	"io/ioutil"
 	"encoding/json"
@@ -12,6 +13,7 @@ import (
 var user = httprouter.New()
 
 func create(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	ctx := context.Background()
 	r, err := ioutil.ReadAll(req.Body)
 	if err != nil {
         http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -25,7 +27,10 @@ func create(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 		return
 	}
 	fmt.Printf("%+v\n", obj)
-	obj.Create()
+	err = obj.Create(ctx)
+	if err != nil {
+        http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
 
 	output, err := json.Marshal(&obj)
 	if err != nil {
@@ -39,8 +44,13 @@ func create(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 }
 
 func read(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	ctx := context.Background()
 	obj := models.User{ Username: ps.ByName("username"), Password: "" }
-	obj.Read()
+	err := obj.Read(ctx)
+	if err != nil {
+        http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	output, err := json.Marshal(&obj)
 	if err != nil {
