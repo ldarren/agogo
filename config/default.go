@@ -27,12 +27,12 @@ func init(){
 	DB.Ddriver = flag.String("db_driver", os.Getenv("db_driver"), "database driver name")
 	//dsn := flag.String("dsn", os.Getenv("DSN"), "connection data source name")
 	DB.Dsn = flag.String("db_source_name", os.Getenv("db_source_name"), "connection data source name")
-	var val int64
-	val, err = strconv.ParseInt(os.Getenv("db_conn_life"), 10, 0)
+	timeout, err := time.ParseDuration(os.Getenv("db_conn_life"))
 	if err != nil {
-		val = 0
+		timeout = 0
 	}
-	DB.Dclt = flag.Duration("db_conn_life", time.Duration(val), "connection max lifetime")
+	DB.Dclt = flag.Duration("db_conn_life", timeout, "connection max lifetime")
+	var val int64
 	val, err = strconv.ParseInt(os.Getenv("db_conn_idle"), 10, 0)
 	if err != nil {
 		val = 2
