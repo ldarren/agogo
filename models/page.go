@@ -1,8 +1,20 @@
 package models
 
 import (
+	"os"
+	"path"
+	"runtime"
     "io/ioutil"
 )
+
+func init(){
+	_, filename, _, _ := runtime.Caller(0)
+	dir := path.Join(path.Dir(filename), "..")
+	err := os.Chdir(dir)
+	if err != nil {
+		panic(err)
+	}
+}
 
 type Page struct {
     Title string

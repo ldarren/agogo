@@ -2,14 +2,15 @@
 A go api framwork
 
 ## setup
-- `go get ./...`
+- `make go-get` or `go get ./...`
 - copy config/dotenv to .env and replace your environment setting
-- `go run main.go` # quick run
-- `go build -o agogo`
+- `make go-build` or `go build -o bin/agogo`
+- `make start-server` run from binary
+- `go run main.go` for quick run
 - `docker build -t agogo` .
 
 ## test
-- `go test -v ./...``
+- `go test -v ./...`
 
 ## features
 - multiple route groups
