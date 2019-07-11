@@ -19,7 +19,7 @@ type DatabaseConfig struct{
 var DB DatabaseConfig
 
 func init(){
-	err := dotenv.Load()
+	err := dotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("unable to read dotenv: %v", err)
 	}
