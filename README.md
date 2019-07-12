@@ -8,7 +8,10 @@ A go api framwork
 - `make go-build` or `go build -o bin/agogo`
 - `make start-server` run from binary
 - `go run main.go` for quick run
-- `docker build -t agogo` .
+
+## docker
+- `docker build -t agogo .`
+- `docker run -d -p 8800:8800 agogo` # access with http://localhost:8800
 
 ## test
 - `go test -v ./...`
