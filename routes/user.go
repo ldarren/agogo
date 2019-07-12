@@ -1,7 +1,7 @@
 package routes
 
 import (
-    "fmt"
+    "log"
 	"context"
     "net/http"
 	"io/ioutil"
@@ -26,7 +26,7 @@ func create(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
         http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Printf("%+v\n", obj)
+	log.Printf("%+v\n", obj)
 	err = obj.Create(ctx)
 	if err != nil {
         http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -40,10 +40,11 @@ func create(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 
 	res.Header().Set("content-type", "application/json")
 	res.Write(output)
-	fmt.Println(string(output))
+	log.Printf("user.write %v\n", output)
 }
 
 func read(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	log.Printf("GET /users/:username\n")
 	ctx := context.Background()
 	obj := models.User{ Username: ps.ByName("username"), Password: "" }
 	err := obj.Read(ctx)
@@ -60,7 +61,7 @@ func read(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 
 	res.Header().Set("content-type", "application/json")
 	res.Write(output)
-	fmt.Println(string(output))
+	log.Printf("user.read %v\n", output)
 }
 
 func init(){

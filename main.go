@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"strings"
     "net/http"
 	"github.com/ldarren/agogo/routes"
@@ -33,6 +33,6 @@ func main() {
 	hs["/wiki"] = routes.GetWiki()
 	hs["/users"] = routes.GetUsers()
 
-	fmt.Printf("agogo is serving at 8800\n")
+	log.Printf("agogo is serving at 8800\n")
     http.ListenAndServe(":8800", hs)
 }

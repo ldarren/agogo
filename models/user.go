@@ -69,7 +69,7 @@ func (u *User) Read(ctx context.Context) error {
 func init(){
 	var err error
 	// Opening a driver typically will not attempt to connect to the database.
-	pool, err = sql.Open(*config.DB.Ddriver, *config.DB.Dsn)
+	pool, err = sql.Open(*config.DB.Driver, *config.DB.Dsn)
 
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
@@ -78,7 +78,7 @@ func init(){
 	}
 	//defer pool.Close()
 
-	pool.SetConnMaxLifetime(*config.DB.Dclt)
-	pool.SetMaxIdleConns(*config.DB.Didle)
-	pool.SetMaxOpenConns(*config.DB.Dopen)
+	pool.SetConnMaxLifetime(*config.DB.ConnLife)
+	pool.SetMaxIdleConns(*config.DB.ConnIdle)
+	pool.SetMaxOpenConns(*config.DB.ConnOpen)
 }
