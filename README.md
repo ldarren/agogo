@@ -3,7 +3,8 @@ A go api framwork
 
 ## setup
 - `make go-get` or `go get ./...`
-- copy config/dotenv to .env and replace your environment setting
+- copy config/dotenv to .env and replace the values with your environment setting
+- copy config/dotenv to models/.env and replace the values with your test environment setting
 - `make go-build` or `go build -o bin/agogo`
 - `make start-server` run from binary
 - `go run main.go` for quick run
